@@ -1,0 +1,29 @@
+# Sensitive config
+application.properties
+application-local.properties
+**/application.properties
+
+# Java / Maven build output
+target/
+*.class
+*.jar
+*.war
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
