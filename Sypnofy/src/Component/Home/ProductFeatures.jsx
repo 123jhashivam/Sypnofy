@@ -2,35 +2,36 @@ import { motion } from "framer-motion";
 import {
   Smartphone,
   BedDouble,
-  Utensils,
   QrCode,
+  FileCheck2,
   ArrowRight,
+  AlertTriangle,
 } from "lucide-react";
 
 const features = [
     {
         icon: Smartphone,
-        title: "Digital Check-In",
+        title: "Aadhaar & DigiLocker KYC",
         description:
-            "Guests complete check-in before arrival with secure digital verification.",
-    },
-    {
-        icon: BedDouble,
-        title: "Housekeeping",
-        description:
-            "Track room cleaning status and assign tasks in real time.",
+            "Guests complete identity verification digitally before check-in — no manual document handling.",
     },
     {
         icon: QrCode,
-        title: "QR Room Access",
+        title: "GST Verification",
         description:
-            "Paperless guest access with QR based verification.",
+            "Your GSTIN is auto-verified against the GST portal at signup.",
     },
     {
-        icon: Utensils,
-        title: "Food Ordering",
+        icon: FileCheck2,
+        title: "Foreign Guest Compliance",
         description:
-            "Guests order food and services directly from their phones.",
+            "Automated Form III filing within the 24-hour reporting window, with receipts stored for audit.",
+    },
+    {
+        icon: BedDouble,
+        title: "Bookings & Property Sync",
+        description:
+            "Booking status, room assignment and guest KYC status stay in sync across your property.",
     },
 ];
 
@@ -61,14 +62,14 @@ Features
 
 <h2 className="mt-5 text-5xl font-bold text-slate-900">
 
-Everything Hotels Need
+Compliance Without The Paperwork
 
 </h2>
 
 <p className="mt-6 max-w-3xl mx-auto text-slate-600 leading-8">
 
-Manage every guest interaction from one connected
-platform.
+From identity verification to foreign-guest filings, every
+compliance step happens inside one connected platform.
 
 </p>
 
@@ -156,7 +157,7 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                                 <p className="text-sm text-slate-500">
 
-                                    Live Hotel Analytics
+                                    Live Compliance Overview
 
                                 </p>
 
@@ -172,7 +173,7 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                         </div>
 
-                        {/* Revenue */}
+                        {/* Verifications */}
 
                         <div className="p-7">
 
@@ -180,13 +181,13 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                                 <p className="text-blue-100">
 
-                                    Monthly Revenue
+                                    Verifications This Month
 
                                 </p>
 
                                 <h2 className="mt-2 text-4xl font-bold">
 
-                                    ₹8.42L
+                                    3,842
 
                                 </h2>
 
@@ -221,7 +222,7 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                                     <p className="text-slate-500 text-sm">
 
-                                        Occupancy
+                                        KYC Verified
 
                                     </p>
 
@@ -237,13 +238,13 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                                     <p className="text-slate-500 text-sm">
 
-                                        Check-ins
+                                        Pending Review
 
                                     </p>
 
                                     <h3 className="mt-2 text-3xl font-bold text-slate-900">
 
-                                        214
+                                        12
 
                                     </h3>
 
@@ -259,7 +260,7 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                                     <h4 className="font-semibold text-slate-800">
 
-                                        Recent Guests
+                                        Recent Verifications
 
                                     </h4>
 
@@ -297,7 +298,7 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                                         <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-600">
 
-                                            Checked In
+                                            Verified
 
                                         </span>
 
@@ -330,13 +331,13 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                         <p className="text-sm text-slate-500">
 
-                            Today's Revenue
+                            KYC Verified Today
 
                         </p>
 
                         <h3 className="mt-2 text-2xl font-bold text-blue-600">
 
-                            ₹24,500
+                            84
 
                         </h3>
 
@@ -356,10 +357,10 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                         <div className="flex items-center gap-4">
 
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
 
-                                <Smartphone
-                                    className="text-green-600"
+                                <AlertTriangle
+                                    className="text-amber-600"
                                     size={24}
                                 />
 
@@ -369,13 +370,13 @@ className="rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shad
 
                                 <h4 className="font-semibold text-slate-900">
 
-                                    Guest Request
+                                    Compliance Alert
 
                                 </h4>
 
                                 <p className="text-sm text-slate-500">
 
-                                    Food Order Received
+                                    Form III Due in 2h
 
                                 </p>
 

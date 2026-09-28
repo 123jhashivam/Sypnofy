@@ -233,6 +233,7 @@ export default function Signup() {
     city: "",
     hotelType: "",
     roomCount: "",
+    gstin: "",
     password: "",
     confirmPassword: "",
     agreedToTerms: false,
@@ -294,6 +295,7 @@ export default function Signup() {
         city: form.city.trim(),
         hotelType: form.hotelType,
         roomRange: form.roomCount,
+        gstin: form.gstin.trim(),
         password: form.password,
         confirmPassword: form.confirmPassword,
         agreedToTerms: form.agreedToTerms,
@@ -511,7 +513,17 @@ export default function Signup() {
                 onChange={update("hotelType")}
                 options={HOTEL_TYPES}
               />
+              <Field
+                label="GSTIN (optional)"
+                placeholder="27AAAAA0000A1Z5"
+                value={form.gstin}
+                onChange={update("gstin")}
+                error={fieldErrors.gstin}
+                hint={fieldErrors.gstin ? undefined : "We'll verify this automatically."}
+              />
             </div>
+
+            
 
             {/* Security */}
             <div className="space-y-5" onFocus={() => setActiveStep(2)}>

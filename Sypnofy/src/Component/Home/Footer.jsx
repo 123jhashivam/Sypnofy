@@ -24,27 +24,27 @@ const socialLinks = [
 ];
 
 const platformLinks = [
-  { label: "Hotel PMS", to: "/platform/pms" },
-  { label: "Digital Check-In", to: "/platform/check-in" },
-  { label: "Housekeeping", to: "/platform/housekeeping" },
-  { label: "Guest Services", to: "/platform/guest-services" },
-  { label: "QR Room Access", to: "/platform/qr-access" },
-  { label: "Analytics Dashboard", to: "/platform/analytics" },
+  { label: "Guest KYC Verification" },
+  { label: "Foreign Guest Compliance" },
+  { label: "Property Management" },
+  { label: "Bookings"},
+  { label: "Audit Logs & Reports"},
+  { label: "Admin & User Roles"},
 ];
 
 const companyLinks = [
-  { label: "About Us", to: "/company/about" },
-  { label: "Careers", to: "/company/careers" },
+  { label: "About Us", to: "/about" },
+  { label: "Careers", to: "/careers" },
   { label: "Our Team", to: "/company/team" },
   { label: "Partners", to: "/partners" },
   { label: "Blog", to: "/blog" },
-  { label: "Contact", to: "/contact" },
+  { label: "Contact", to: "/contactUs" },
 ];
 
 const resourceLinks = [
   { label: "Documentation", to: "/resources/docs" },
   { label: "Help Center", to: "/resources/help" },
-  { label: "API Reference", to: "/resources/api" },
+  { label: "API Reference", to: "/apis" },
   { label: "Privacy Policy", to: "/legal/privacy" },
   { label: "Terms & Conditions", to: "/legal/terms" },
   { label: "Support", to: "/support" },
@@ -94,10 +94,8 @@ function LinkColumn({ title, links, delay }) {
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-gradient-to-br from-[#0B3BFF] via-[#1557FF] to-[#2F7BFF] pt-28 text-white">
-      {/* Subtle top hairline separating the footer from page content above */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
-      {/* Background glow blobs */}
       <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-cyan-400/20 blur-[180px]" />
       <div className="absolute bottom-[-150px] right-[-150px] h-[600px] w-[600px] rounded-full bg-indigo-500/20 blur-[220px]" />
       <div className="absolute left-1/2 top-1/2 h-[450px] w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-300/10 blur-[180px]" />
@@ -120,12 +118,13 @@ export default function Footer() {
 
               <h2 className="mt-6 text-4xl font-bold leading-tight md:text-5xl">
                 Let's Build The Future
-                <span className="block">Of Hospitality Together.</span>
+                <span className="block">Of Hospitality Compliance.</span>
               </h2>
 
               <p className="mt-6 max-w-xl text-lg leading-8 text-blue-50">
-                Get product updates, hotel technology insights, feature
-                releases and hospitality trends directly in your inbox.
+                Get product updates, compliance changes, feature releases
+                and hospitality-verification insights directly in your
+                inbox.
               </p>
             </div>
 
@@ -160,7 +159,7 @@ export default function Footer() {
               </div>
 
               <p className="mt-5 text-sm text-blue-100">
-                No spam. Only product updates and hospitality news.
+                No spam. Only product updates and compliance news.
               </p>
             </div>
           </div>
@@ -181,9 +180,9 @@ export default function Footer() {
             </h2>
 
             <p className="mt-6 max-w-sm leading-8 text-blue-100/90">
-              Sypnofy helps hotels simplify operations, automate guest
-              experiences and manage everything from one intelligent
-              platform.
+              Sypnofy helps hotels verify guest identity, automate
+              foreign-guest compliance and keep an audit-ready record —
+              all from one platform.
             </p>
 
             {/* Contact */}
@@ -193,7 +192,7 @@ export default function Footer() {
                   <MapPin size={20} className="text-white" />
                 </div>
                 <div>
-                  <p className="font-medium text-white">New Delhi, India</p>
+                  <p className="font-medium text-white">Noida, India</p>
                   <span className="text-sm text-blue-200">
                     Corporate Office
                   </span>
@@ -205,7 +204,7 @@ export default function Footer() {
                   <Phone size={20} className="text-white" />
                 </div>
                 <div>
-                  <p className="font-medium text-white">+91 98765 43210</p>
+                  <p className="font-medium text-white">+91 89202 80459</p>
                   <span className="text-sm text-blue-200">Mon - Sat</span>
                 </div>
               </div>
@@ -251,12 +250,11 @@ export default function Footer() {
             {/* Left */}
             <div>
               <h3 className="text-2xl font-bold text-white">
-                Building The Future Of Hospitality.
+                Building Compliance Hotels Can Trust.
               </h3>
               <p className="mt-3 max-w-xl leading-7 text-blue-100/90">
-                Empowering hotels with digital innovation, smarter guest
-                experiences and seamless operations through one intelligent
-                platform.
+                Helping hotels replace manual registers with Aadhaar-backed
+                verification and automated compliance reporting.
               </p>
             </div>
 
@@ -289,7 +287,7 @@ export default function Footer() {
             <p className="text-sm text-blue-100">
               © 2026
               <span className="mx-1 font-semibold text-white">
-                Sypnofy Technologies Pvt. Ltd.
+                Sypnotech India Pvt. Ltd.
               </span>
               All rights reserved.
             </p>

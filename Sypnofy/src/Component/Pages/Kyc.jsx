@@ -4,6 +4,7 @@ import StatusBadge from "../StatusBadge"; // apna actual relative path check kar
 import KpiCard from "../KpiCard"; // apna actual relative path check kar lena
 import { ClipboardCheck, XCircle, ScanFace } from 'lucide-react'
 import { listKyc, startKyc, checkKycStatus } from "../../lib/kyc"; // apna actual relative path check kar lena
+import VerifyCodeLookup from "../VerifyCodeLookup";
 
 const STATUS_LABEL = {
   VERIFIED: 'Verified',
@@ -48,9 +49,24 @@ export default function Kyc() {
   }
 
   useEffect(() => {
-    loadList()
+    async function init() {
+      setLoading(true)
+      setError('')
+      try {
+        const data = await listKyc()
+        setRecords(data)
+        // Resume polling for any records still pending from before
+        data
+          .filter((r) => r.status === 'PENDING')
+          .forEach((r) => pollStatus(r.id))
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    init()
     return () => {
-      // stop any in-flight polling when leaving the page
       Object.values(pollingRef.current).forEach(clearInterval)
     }
   }, [])
@@ -75,27 +91,27 @@ export default function Kyc() {
     }, 3000)
   }
 
-  async function handleStartVerification(e) {
-    e.preventDefault()
-    if (!guestName.trim() || starting) return
+ async function handleStartVerification(e) {
+  e.preventDefault()
+  if (!guestName.trim() || starting) return
 
-    setStarting(true)
-    setError('')
-    try {
-      const result = await startKyc({ guestName: guestName.trim() })
-      setRecords((prev) => [result, ...prev])
-      setGuestName('')
+  setStarting(true)
+  setError('')
+  try {
+    const result = await startKyc({ guestName: guestName.trim() })
+    setRecords((prev) => [result, ...prev])
+    setGuestName('')
 
-      if (result.authorizationUrl) {
-        window.open(result.authorizationUrl, '_blank', 'noopener,noreferrer')
-      }
-      pollStatus(result.id)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setStarting(false)
+    if (result.authorizationUrl) {
+      window.open(result.authorizationUrl, '_blank', 'noopener,noreferrer')
     }
+    pollStatus(result.id)
+  } catch (err) {
+    setError(err.message)
+  } finally {
+    setStarting(false)
   }
+}
 
   const verifiedCount = records.filter((r) => r.status === 'VERIFIED').length
   const pendingCount = records.filter((r) => r.status === 'PENDING').length
@@ -135,6 +151,7 @@ export default function Kyc() {
           <KpiCard key={k.label} {...k} />
         ))}
       </div>
+      <VerifyCodeLookup />
 
       {/* Start a new verification */}
       <form onSubmit={handleStartVerification} className="bg-white rounded-xl shadow-card border border-slate-100 p-4 flex flex-col sm:flex-row gap-3 sm:items-end">

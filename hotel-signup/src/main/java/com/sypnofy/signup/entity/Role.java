@@ -10,5 +10,7 @@ public enum Role {
 
     // Reserved for the highest-privilege internal role (e.g. can manage
     // other admins). Also not wired to any page yet.
-    SUPERADMIN
+    SUPERADMIN,
+
+       GUEST
 }

@@ -1,17 +1,16 @@
 package com.sypnofy.signup.service;
 
-import com.sypnofy.signup.dto.KycResponse;
-import com.sypnofy.signup.dto.StartKycRequest;
+import com.sypnofy.signup.dto.StartSelfKycRequest;
+import com.sypnofy.signup.dto.VerificationCodeResponse;
+import com.sypnofy.signup.entity.GuestAccount;
 import com.sypnofy.signup.entity.GuestKyc;
-import com.sypnofy.signup.entity.Hotel;
 import com.sypnofy.signup.entity.KycVerificationStatus;
-import com.sypnofy.signup.entity.User;
 import com.sypnofy.signup.entity.VerifiedIdentity;
 import com.sypnofy.signup.exception.DigiLockerException;
 import com.sypnofy.signup.exception.InvalidCredentialsException;
 import com.sypnofy.signup.exception.InvalidStepException;
+import com.sypnofy.signup.repository.GuestAccountRepository;
 import com.sypnofy.signup.repository.GuestKycRepository;
-import com.sypnofy.signup.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,97 +20,101 @@ import java.security.MessageDigest;
 import java.time.Instant;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class GuestKycService {
+public class GuestSelfKycService {
 
+    private final GuestAccountRepository guestAccountRepository;
     private final GuestKycRepository guestKycRepository;
-    private final UserRepository userRepository;
     private final DigiLockerClient digiLockerClient;
     private final IdentityVerificationService identityVerificationService;
     private final String redirectUrl;
 
-    public GuestKycService(GuestKycRepository guestKycRepository,
-                            UserRepository userRepository,
-                            DigiLockerClient digiLockerClient,
-                            IdentityVerificationService identityVerificationService,
-                            @Value("${sandbox.digilocker.redirect-url}") String redirectUrl) {
+    public GuestSelfKycService(GuestAccountRepository guestAccountRepository,
+                                GuestKycRepository guestKycRepository,
+                                DigiLockerClient digiLockerClient,
+                                IdentityVerificationService identityVerificationService,
+                                @Value("${sandbox.digilocker.redirect-url}") String redirectUrl) {
+        this.guestAccountRepository = guestAccountRepository;
         this.guestKycRepository = guestKycRepository;
-        this.userRepository = userRepository;
         this.digiLockerClient = digiLockerClient;
         this.identityVerificationService = identityVerificationService;
         this.redirectUrl = redirectUrl;
     }
 
-    public List<KycResponse> listForHotel(String email) {
-        Hotel hotel = currentHotel(email);
-        return guestKycRepository.findByHotelIdOrderByCreatedAtDesc(hotel.getId())
-                .stream()
-                .map(k -> toResponse(k, null))
-                .toList();
-    }
-
     @Transactional
-    public KycResponse start(String email, StartKycRequest request) {
-        Hotel hotel = currentHotel(email);
+    public Map<String, Object> start(String guestEmail, StartSelfKycRequest request) {
+        GuestAccount guest = currentGuest(guestEmail);
         String aadhaarHash = hashValue(request.getAadhaarNumber());
 
         var cached = identityVerificationService.lookupByHash(aadhaarHash);
         if (cached.isPresent()) {
             VerifiedIdentity identity = cached.get();
+            linkGuestToIdentity(guest, identity);
 
-            GuestKyc kyc = new GuestKyc();
-            kyc.setHotel(hotel);
-            kyc.setBookingId(request.getBookingId());
-            kyc.setGuestName(request.getGuestName().trim());
-            kyc.setDocType("aadhaar");
-            kyc.setSessionId("cached");
-            kyc.setAadhaarHash(aadhaarHash);
-            kyc.setVerifiedIdentityId(identity.getId());
-            kyc.setStatus(KycVerificationStatus.VERIFIED);
-            kyc.setVerifiedName(identity.getVerifiedName());
-            kyc.setMaskedIdNumber(identity.getMaskedIdNumber());
-            kyc.setVerifiedAt(Instant.now());
-            kyc = guestKycRepository.save(kyc);
-
-            return toResponse(kyc, null);
+            return Map.of(
+                    "status", "VERIFIED",
+                    "verificationCode", identity.getVerificationCode(),
+                    "verifiedName", String.valueOf(identity.getVerifiedName()),
+                    "maskedIdNumber", String.valueOf(identity.getMaskedIdNumber())
+            );
         }
 
         DigiLockerClient.SessionInitResult session =
                 digiLockerClient.initiateSession(List.of("aadhaar", "pan"), redirectUrl);
 
         GuestKyc kyc = new GuestKyc();
-        kyc.setHotel(hotel);
-        kyc.setBookingId(request.getBookingId());
-        kyc.setGuestName(request.getGuestName().trim());
+        kyc.setHotel(null);
+        kyc.setGuestAccountId(guest.getId());
+        kyc.setGuestName(guest.getFirstName() + " " + guest.getLastName());
         kyc.setDocType("aadhaar");
         kyc.setSessionId(session.sessionId());
         kyc.setAadhaarHash(aadhaarHash);
         kyc.setStatus(KycVerificationStatus.PENDING);
         kyc = guestKycRepository.save(kyc);
 
-        return toResponse(kyc, session.authorizationUrl());
+        return Map.of(
+                "status", "PENDING",
+                "kycId", kyc.getId(),
+                "authorizationUrl", session.authorizationUrl()
+        );
     }
 
     @Transactional
-    public KycResponse checkStatus(Long kycId) {
+    public VerificationCodeResponse checkStatus(String guestEmail, Long kycId) {
+        GuestAccount guest = currentGuest(guestEmail);
+
         GuestKyc kyc = guestKycRepository.findById(kycId)
                 .orElseThrow(() -> new InvalidStepException("KYC record not found: " + kycId));
 
+        if (kyc.getGuestAccountId() == null || !kyc.getGuestAccountId().equals(guest.getId())) {
+            throw new InvalidCredentialsException();
+        }
+
+        if (kyc.getStatus() == KycVerificationStatus.VERIFIED && kyc.getVerifiedIdentityId() != null) {
+            var identity = identityVerificationService.lookupById(kyc.getVerifiedIdentityId());
+            if (identity.isPresent()) {
+                return new VerificationCodeResponse(true, identity.get().getVerificationCode(),
+                        identity.get().getVerifiedName(), identity.get().getMaskedIdNumber(),
+                        identity.get().getVerifiedAt().toString());
+            }
+        }
+
         if (kyc.getStatus() != KycVerificationStatus.PENDING) {
-            return toResponse(kyc, null);
+            return new VerificationCodeResponse(false, null, null, null, null);
         }
 
         try {
             String xml = digiLockerClient.fetchDocumentXml(kyc.getSessionId(), kyc.getDocType());
             if (xml == null) {
-                return toResponse(kyc, null);
+                return new VerificationCodeResponse(false, null, null, null, null);
             }
 
             AadhaarDetails details = parseAadhaarXml(xml);
 
             VerifiedIdentity identity = identityVerificationService.getOrCreate(
-                    kyc.getAadhaarHash(), details.name(), details.maskedUid(), null);
+                    kyc.getAadhaarHash(), details.name(), details.maskedUid(), guest.getId());
 
             kyc.setStatus(KycVerificationStatus.VERIFIED);
             kyc.setVerifiedName(details.name());
@@ -120,22 +123,29 @@ public class GuestKycService {
             kyc.setVerifiedAt(Instant.now());
             guestKycRepository.save(kyc);
 
+            linkGuestToIdentity(guest, identity);
+
+            return new VerificationCodeResponse(true, identity.getVerificationCode(),
+                    identity.getVerifiedName(), identity.getMaskedIdNumber(), identity.getVerifiedAt().toString());
+
         } catch (DigiLockerException e) {
             kyc.setStatus(KycVerificationStatus.FAILED);
             kyc.setFailureReason(e.getMessage());
             guestKycRepository.save(kyc);
+            return new VerificationCodeResponse(false, null, null, null, null);
         }
-
-        return toResponse(kyc, null);
     }
 
-    private Hotel currentHotel(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(InvalidCredentialsException::new);
-        if (user.getHotels().isEmpty()) {
-            throw new InvalidStepException("No property found for this account yet.");
+    private void linkGuestToIdentity(GuestAccount guest, VerifiedIdentity identity) {
+        if (guest.getVerifiedIdentityId() == null) {
+            guest.setVerifiedIdentityId(identity.getId());
+            guestAccountRepository.save(guest);
         }
-        return user.getHotels().get(0);
+    }
+
+    private GuestAccount currentGuest(String email) {
+        return guestAccountRepository.findByEmail(email)
+                .orElseThrow(InvalidCredentialsException::new);
     }
 
     private String hashValue(String value) {
@@ -173,20 +183,5 @@ public class GuestKycService {
         } catch (Exception e) {
             throw new DigiLockerException("Could not parse Aadhaar XML: " + e.getMessage(), e);
         }
-    }
-
-    private KycResponse toResponse(GuestKyc kyc, String authorizationUrl) {
-        return new KycResponse(
-                kyc.getId(),
-                kyc.getGuestName(),
-                kyc.getDocType(),
-                kyc.getStatus().name(),
-                authorizationUrl,
-                kyc.getVerifiedName(),
-                kyc.getMaskedIdNumber(),
-                kyc.getFailureReason(),
-                kyc.getCreatedAt() != null ? kyc.getCreatedAt().toString() : null,
-                kyc.getVerifiedAt() != null ? kyc.getVerifiedAt().toString() : null
-        );
     }
 }

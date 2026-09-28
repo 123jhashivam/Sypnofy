@@ -1,35 +1,35 @@
 import { motion } from "framer-motion";
 import {
   ShieldCheck,
-  Smartphone,
-  BellRing,
+  FileCheck2,
   LayoutDashboard,
+  BellRing,
 } from "lucide-react";
 
 const cards = [
   {
     icon: ShieldCheck,
-    title: "Secure Digital Check-In",
+    title: "Aadhaar-Verified Check-In",
     description:
-      "Guests can complete their check-in digitally before arriving, reducing reception waiting time.",
+      "Guests verify identity via Aadhaar Offline e-KYC or DigiLocker before arrival — no photocopies at the front desk.",
   },
   {
-    icon: Smartphone,
-    title: "Guest Services",
+    icon: FileCheck2,
+    title: "DigiLocker Document Fetch",
     description:
-      "Food ordering, housekeeping requests and concierge services from one mobile interface.",
+      "Pull a verified passport, driving licence or PAN directly from DigiLocker with the guest's consent.",
   },
   {
     icon: LayoutDashboard,
-    title: "Hotel Dashboard",
+    title: "Compliance Dashboard",
     description:
-      "Track bookings, occupancy, housekeeping and revenue from one modern dashboard.",
+      "Track KYC status, foreign-guest filings and the audit trail from one property-level dashboard.",
   },
   {
     icon: BellRing,
-    title: "Real-time Notifications",
+    title: "Real-time Compliance Alerts",
     description:
-      "Receive instant updates for check-ins, guest requests and housekeeping activities.",
+      "Get notified the moment a Form III filing is due or a verification fails.",
   },
 ];
 
@@ -58,20 +58,19 @@ export default function WhySypnofy() {
 
             <h2 className="mt-6 text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
 
-              Hotel Operations
+              Guest Verification
 
               <br />
 
-              Made Smarter.
+              Hotels Can Trust.
 
             </h2>
 
             <p className="mt-8 text-lg text-slate-600 leading-8">
 
-              Manage guests, check-ins, housekeeping,
-              staff communication and hotel operations
-              through one intelligent platform designed
-              for modern hospitality businesses.
+              Verify guest identity, file foreign-guest compliance and
+              keep an audit-ready record — all from one platform built
+              for modern hospitality operators.
 
             </p>
 
@@ -81,13 +80,13 @@ export default function WhySypnofy() {
 
                 <h3 className="text-5xl font-bold text-blue-600">
 
-                  98%
+                  &lt;5s
 
                 </h3>
 
                 <p className="mt-2 text-slate-600">
 
-                  Guest Satisfaction
+                  Average Verification Time
 
                 </p>
 
@@ -103,7 +102,7 @@ export default function WhySypnofy() {
 
                 <p className="mt-2 text-slate-600">
 
-                  Customer Support
+                  Compliance Monitoring
 
                 </p>
 
@@ -129,13 +128,13 @@ export default function WhySypnofy() {
 
                 <h3 className="text-5xl font-bold text-blue-600">
 
-                  40+
+                  100%
 
                 </h3>
 
                 <p className="mt-2 text-slate-600">
 
-                  Cities
+                  On-Time Form III Filing
 
                 </p>
 

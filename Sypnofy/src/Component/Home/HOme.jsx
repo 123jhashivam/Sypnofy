@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle2, ClipboardList, Circle } from "lucide-react";
 
 // -----------------------------------------------------------------------
-// Floating glass card used for the "Check in complete" / "Order placed"
+// Floating glass card used for the "Check in complete" / "Form III filed"
 // overlays on top of the device panel.
 // -----------------------------------------------------------------------
 function FloatingCard({ icon, iconBg, title, subtitle, className, delay = 0 }) {
@@ -28,9 +28,6 @@ function FloatingCard({ icon, iconBg, title, subtitle, className, delay = 0 }) {
 
 // -----------------------------------------------------------------------
 // Glass device panel — sits on top of the full-bleed background video.
-// It doesn't hold its own video; the bg-white/5 + backdrop-blur lets the
-// section's video show through it, tinted, so it reads as "the same
-// video, framed" rather than a second video.
 // -----------------------------------------------------------------------
 function DevicePanel() {
   return (
@@ -68,8 +65,8 @@ function DevicePanel() {
       <FloatingCard
         icon={<ClipboardList size={18} className="text-blue-600" />}
         iconBg="bg-blue-50"
-        title="Order placed"
-        subtitle="In room dining · ETA 18m"
+        title="Form III filed"
+        subtitle="FRRO receipt ready"
         className="-right-4 bottom-16 sm:-right-8"
         delay={0.3}
       />
@@ -93,7 +90,6 @@ export default function Hero() {
         poster="/assets/hero-video-poster.jpg"
         onError={(e) => console.error("Video failed to load:", e)}
       >
-        {/* Replace with your own hosted video file */}
         <source src="/videos/hero.mp4" type="video/mp4" />
         Your browser does not support HTML5 video.
       </video>
@@ -115,9 +111,9 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="text-5xl font-extrabold leading-[1.08] tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)] sm:text-6xl"
           >
-            Hotel guest experience and operations that{" "}
+            Guest identity verification hotels can actually{" "}
             <span className="bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
-              grow ancillary revenue
+              trust
             </span>
             .
           </motion.h1>
@@ -128,10 +124,10 @@ export default function Hero() {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="mt-7 max-w-xl text-lg leading-relaxed text-slate-200 drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]"
           >
-            Sypnofy is a hotel guest experience and operations platform that connects
-            digital check-in, in-stay guest services, and staff workflows—so hotels
-            can deliver clearer service and grow paid guest services after the room
-            is sold.
+            Sypnofy verifies guest identity with Aadhaar Offline e-KYC and
+            DigiLocker, automates foreign-guest Form III compliance, and
+            keeps a tamper-evident audit trail — so front desk teams stop
+            chasing paperwork.
           </motion.p>
 
           <motion.p
@@ -140,8 +136,8 @@ export default function Hero() {
             transition={{ delay: 0.45, duration: 0.8 }}
             className="mt-4 max-w-xl text-sm leading-relaxed text-slate-400"
           >
-            Built for hotel owners and operators who want one place for guest
-            journey and ops work, not another disconnected login.
+            Built for property managers and compliance officers who need
+            verification that holds up, not another manual register.
           </motion.p>
 
           <motion.div
@@ -151,7 +147,7 @@ export default function Hero() {
             className="mt-9 flex flex-wrap items-center gap-4"
           >
             <Link
-              to="/demo"
+              to="/signup"
               className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-[15px] font-semibold text-white shadow-lg shadow-blue-600/30 transition-all duration-300 hover:bg-blue-500 hover:scale-105"
             >
               Book a Demo

@@ -11,11 +11,19 @@ public class GuestKyc {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "hotel_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "hotel_id", nullable = true)
     private Hotel hotel;
 
-    // Optional link to a booking, if KYC is being done as part of check-in
+    // Set instead of hotel when a guest verifies themselves (no hotel involved).
+    @Column(name = "guest_account_id")
+    private Long guestAccountId;
+
+    // Once verified, points at the shared VerifiedIdentity record that
+    // carries the portable verification code.
+    @Column(name = "verified_identity_id")
+    private Long verifiedIdentityId;
+
     @Column(name = "booking_id")
     private Long bookingId;
 
@@ -23,10 +31,12 @@ public class GuestKyc {
     private String guestName;
 
     @Column(name = "doc_type", nullable = false, length = 20)
-    private String docType; // "aadhaar" | "pan" | "driving_license"
+    private String docType;
 
-    // Sandbox.co.in's DigiLocker session identifier — needed for the
-    // Fetch Document call once the guest has completed consent.
+    // SHA-256 hash of the Aadhaar number the guest typed — never the raw number.
+    @Column(name = "aadhaar_hash", length = 64)
+    private String aadhaarHash;
+
     @Column(name = "session_id", nullable = false, length = 100)
     private String sessionId;
 
@@ -34,8 +44,6 @@ public class GuestKyc {
     @Column(nullable = false, length = 20)
     private KycVerificationStatus status = KycVerificationStatus.PENDING;
 
-    // Populated once verified — only non-sensitive, display-safe fields.
-    // Full document payloads (e.g. Aadhaar XML) are never persisted.
     @Column(name = "verified_name", length = 150)
     private String verifiedName;
 
@@ -61,6 +69,12 @@ public class GuestKyc {
     public Hotel getHotel() { return hotel; }
     public void setHotel(Hotel hotel) { this.hotel = hotel; }
 
+    public Long getGuestAccountId() { return guestAccountId; }
+    public void setGuestAccountId(Long guestAccountId) { this.guestAccountId = guestAccountId; }
+
+    public Long getVerifiedIdentityId() { return verifiedIdentityId; }
+    public void setVerifiedIdentityId(Long verifiedIdentityId) { this.verifiedIdentityId = verifiedIdentityId; }
+
     public Long getBookingId() { return bookingId; }
     public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
 
@@ -69,6 +83,9 @@ public class GuestKyc {
 
     public String getDocType() { return docType; }
     public void setDocType(String docType) { this.docType = docType; }
+
+    public String getAadhaarHash() { return aadhaarHash; }
+    public void setAadhaarHash(String aadhaarHash) { this.aadhaarHash = aadhaarHash; }
 
     public String getSessionId() { return sessionId; }
     public void setSessionId(String sessionId) { this.sessionId = sessionId; }

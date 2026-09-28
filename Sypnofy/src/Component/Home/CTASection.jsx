@@ -54,11 +54,11 @@ export default function CTASection() {
 
           <h2 className="mt-8 text-4xl md:text-6xl font-bold leading-tight">
 
-            Ready To Transform
+            Ready For Verification
 
             <span className="block">
 
-              Your Hotel Operations?
+              That Actually Holds Up?
 
             </span>
 
@@ -66,9 +66,9 @@ export default function CTASection() {
 
           <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-blue-50">
 
-            Simplify guest check-ins, automate housekeeping,
-            manage bookings and deliver a premium guest
-            experience from one powerful hotel platform.
+            Verify guest identity with Aadhaar and DigiLocker, automate
+            foreign-guest compliance filing, and keep an audit-ready trail
+            — all from one platform.
 
           </p>
 

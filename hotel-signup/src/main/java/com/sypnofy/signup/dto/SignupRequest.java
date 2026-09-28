@@ -42,6 +42,10 @@ public class SignupRequest {
     @NotBlank(message = "Number of rooms is required")
     private String roomRange;
 
+    // Optional — if provided, gets auto-verified against the GST portal at signup
+    @Pattern(regexp = "^$|^[0-9A-Z]{15}$", message = "GSTIN must be 15 characters")
+    private String gstin;
+
     // ---- Security ----
     @NotBlank(message = "Password is required")
     @Size(min = 8, max = 72, message = "Password must be at least 8 characters")
@@ -85,6 +89,9 @@ public class SignupRequest {
 
     public String getRoomRange() { return roomRange; }
     public void setRoomRange(String roomRange) { this.roomRange = roomRange; }
+
+    public String getGstin() { return gstin; }
+    public void setGstin(String gstin) { this.gstin = gstin; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }

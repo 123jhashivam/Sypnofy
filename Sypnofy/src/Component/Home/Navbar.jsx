@@ -6,86 +6,103 @@ import {
   X,
   ShieldCheck,
   Building2,
-  Hotel,
   Users,
-  Briefcase,
-  Wifi,
-  Code2,
+  DoorOpen,
+  FileCheck2,
+  ClipboardList,
+  KeyRound,
   ArrowRight,
+  Plane,
+  Code2,
+  BedDouble,
 } from "lucide-react";
 
 // -----------------------------------------------------------------------
 // Data — edit these to change menu content without touching markup.
 // `to` values are react-router-dom paths. The order of NAV_LINKS is the
 // order items render in — Home is first, so it appears before Products.
+//
+// This list only includes what Sypnofy actually offers right now — no
+// placeholder/future products. Update it as real features ship.
 // -----------------------------------------------------------------------
 const PRODUCTS_MEGA = {
   columns: [
     [
       {
-        icon: Hotel,
-        title: "In-Stay Suite",
-        desc: "Order food, book spa, request housekeeping in-app.",
-        to: "/products/in-stay-suite",
-      },
-      {
-        icon: Wifi,
-        title: "In-app Wi-Fi & Intercom",
-        desc: "Per-stay credentials, push-to-talk, room-to-room.",
-        to: "/products/wifi-intercom",
-      },
-    ],
-    [
-      {
         icon: ShieldCheck,
-        title: "Identity Onboarding",
-        desc: "Aadhaar / Passport / DL OCR + liveness in one pass.",
-        to: "/products/identity-onboarding",
+        title: "Guest KYC (DigiLocker)",
+        desc: "Aadhaar verification via a real DigiLocker consent flow.",
+        
       },
       {
-        icon: Users,
-        title: "Visitor Management",
-        desc: "Pre-invite, e-pass, host approvals for offices & gov.",
-        to: "/products/visitor-management",
+        icon: KeyRound,
+        title: "Verification Code Lookup",
+        desc: "Type a guest's code, confirm identity instantly — no DigiLocker needed again.",
+        
       },
     ],
     [
+      {
+        icon: DoorOpen,
+        title: "Check-in / Check-out",
+        desc: "Digital arrivals, departures, and room status tracking.",
+        
+      },
       {
         icon: Building2,
-        title: "Smart Room Allocation",
-        desc: "Auto-occupy, auto-release, real-time PMS sync.",
-        to: "/products/smart-room-allocation",
+        title: "Property & Booking Management",
+        desc: "Manage properties, rooms, and bookings in one place.",
+        
+      },
+    ],
+    [
+      {
+        icon: FileCheck2,
+        title: "GST Verification",
+        desc: "Your GSTIN is auto-verified against the GST portal at signup.",
+        
       },
       {
-        icon: Briefcase,
-        title: "HRMS",
-        desc: "Attendance, leave, payslips on the same face login.",
-        to: "/products/hrms",
+        icon: ClipboardList,
+        title: "Compliance & Audit Reports",
+        desc: "Audit logs and compliance-ready reporting for your property.",
+        
       },
     ],
   ],
   panel: {
-    icon: Code2,
-    title: "Build with our APIs",
-    desc: "Embed DigiGo APIs in your stack",
-    cta: "Explore",
-    to: "/developers/api",
+    icon: Users,
+    title: "One-time Guest Verification",
+    desc: "Guests verify once — every hotel on Sypnofy confirms them instantly",
+    cta: "Learn more",
+    
   },
 };
 
 const INDUSTRIES_DROPDOWN = [
-  { title: "Retail", desc: "Point of sale & inventory", to: "/industries/retail" },
-  { title: "Healthcare", desc: "Patient-first digital tools", to: "/industries/healthcare" },
-  { title: "Finance", desc: "Secure, compliant, fast", to: "/industries/finance" },
+  { title: "Flight", to: "/industries/flights", icon: Plane },
+  { title: "API", to: "/industries/api", icon: Code2 },
+];
+
+// "For Hotels" dropdown — hotel-vendor login/signup, tucked away here so
+// it doesn't compete with the primary guest CTAs on the right.
+// "For Hotels" dropdown — hotel-vendor login/signup, tucked away here so
+// it doesn't compete with the primary guest CTAs on the right.
+const FOR_HOTELS_DROPDOWN = [
+  { title: "Hotel Login", desc: "Sign in to your property dashboard", to: "/login" },
+  { title: "List your property", desc: "Create a hotel-vendor account", to: "/signup" },
 ];
 
 const NAV_LINKS = [
   { label: "Home", to: "/" },
+  { label: "Hotel", to: "/industries/hotels", icon: BedDouble },
+  { label: "Flight", to: "/industries/flights", icon: Plane },
+  { label: "API", to: "/industries/api", icon: Code2 },
   { label: "Products", mega: PRODUCTS_MEGA },
-  { label: "Industries", dropdown: INDUSTRIES_DROPDOWN },
   { label: "Pricing", to: "/pricing" },
-  { label: "Company", to: "/company" },
-  { label: "Partners", to: "/partners" },
+  { label: "Careers", to: "/careers" },
+  { label: "Contact Us", to: "/ContactUs" },
+  
 ];
 
 // -----------------------------------------------------------------------
@@ -177,7 +194,7 @@ function ProductsMega({ open, data }) {
 }
 
 // -----------------------------------------------------------------------
-// Small dropdown (Industries)
+// Small dropdown (Industries, For Hotels)
 // -----------------------------------------------------------------------
 function SimpleDropdown({ open, items }) {
   return (
@@ -189,25 +206,45 @@ function SimpleDropdown({ open, items }) {
       }`}
     >
       <div className="rounded-xl border border-slate-100 bg-white p-2 shadow-xl shadow-slate-200/60 ring-1 ring-black/5">
-        {items.map((item) => (
-          <Link
-            key={item.title}
-            to={item.to}
-            className="group flex flex-col rounded-lg px-3 py-2.5 transition-colors duration-150 hover:bg-blue-50"
-          >
-            <span className="text-sm font-semibold text-slate-800 group-hover:text-blue-600">
-              {item.title}
-            </span>
-            <span className="text-xs text-slate-500">{item.desc}</span>
-          </Link>
-        ))}
+        {items.map((item) => {
+          const Icon = item.icon;
+          if (Icon) {
+            return (
+              <Link
+                key={item.title}
+                to={item.to}
+                className="group flex items-center gap-2.5 rounded-lg px-3 py-2.5 transition-colors duration-150 hover:bg-blue-50"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors duration-200 group-hover:bg-blue-100">
+                  <Icon size={16} strokeWidth={2} />
+                </span>
+                <span className="text-sm font-semibold text-slate-800 group-hover:text-blue-600">
+                  {item.title}
+                </span>
+              </Link>
+            );
+          }
+          return (
+            <Link
+              key={item.title}
+              to={item.to}
+              className="group flex flex-col rounded-lg px-3 py-2.5 transition-colors duration-150 hover:bg-blue-50"
+            >
+              <span className="text-sm font-semibold text-slate-800 group-hover:text-blue-600">
+                {item.title}
+              </span>
+              <span className="text-xs text-slate-500">{item.desc}</span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
 }
 
 // -----------------------------------------------------------------------
-// Desktop nav item — plain link or small anchored dropdown (Industries)
+// Desktop nav item — plain link or small anchored dropdown (Industries,
+// For Hotels)
 // -----------------------------------------------------------------------
 function NavItem({ link }) {
   const [open, setOpen] = useState(false);
@@ -222,11 +259,13 @@ function NavItem({ link }) {
   };
 
   if (!link.dropdown) {
+    const Icon = link.icon;
     return (
       <Link
-        to={link.to}
-        className="text-[15px] font-medium text-slate-700 transition-colors duration-200 hover:text-blue-600"
-      >
+  to={link.to}
+  className="flex items-center gap-1.5 whitespace-nowrap text-[14px] font-medium text-slate-700 transition-colors duration-200 hover:text-blue-600"
+>
+        {Icon && <Icon size={16} strokeWidth={2} />}
         {link.label}
       </Link>
     );
@@ -255,7 +294,6 @@ function NavItem({ link }) {
     </div>
   );
 }
-
 // -----------------------------------------------------------------------
 // Mobile accordion item
 // -----------------------------------------------------------------------
@@ -268,12 +306,14 @@ function MobileAccordionItem({ link, onNavigate }) {
     : null;
 
   if (!items) {
+    const Icon = link.icon;
     return (
       <Link
         to={link.to}
         onClick={onNavigate}
-        className="block py-3 text-[15px] font-medium text-slate-700 border-b border-slate-100 last:border-0"
+        className="flex items-center gap-2 py-3 text-[15px] font-medium text-slate-700 border-b border-slate-100 last:border-0"
       >
+        {Icon && <Icon size={16} strokeWidth={2} className="text-slate-500" />}
         {link.label}
       </Link>
     );
@@ -314,7 +354,6 @@ function MobileAccordionItem({ link, onNavigate }) {
     </div>
   );
 }
-
 // -----------------------------------------------------------------------
 // Main Navbar
 // -----------------------------------------------------------------------
@@ -363,10 +402,10 @@ export default function Navbar() {
       >
         <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Left cluster: logo + nav links, hugging the left side */}
-          <div className="flex items-center gap-12">
+          <div className="flex items-center gap-8 xl:gap-10">
             <Logo />
 
-            <div className="hidden lg:flex lg:items-center lg:gap-12">
+            <div className="hidden lg:flex lg:items-center lg:gap-8 whitespace-nowrap">
               {NAV_LINKS.map((link) => {
                 if (link.mega) {
                   return (
@@ -395,21 +434,28 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Right side (desktop) — pushed to the far right */}
-          <div className="hidden lg:flex lg:items-center lg:gap-8">
-            <Link
-              to="/login"
-              className="rounded-full bg-blue-600 px-5 py-2.5 text-[15px] font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="rounded-full bg-blue-600 px-5 py-2.5 text-[15px] font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
-            >
-              Signup
-            </Link>
-          </div>
+          {/* Right side (desktop) — guest sign-in / sign-up are the
+              primary CTAs here; hotel login lives in the "For Hotels"
+              dropdown on the left instead, so the two audiences don't
+              collide on the same two buttons. */}
+          <div className="hidden lg:flex lg:items-center lg:gap-5 shrink-0">
+  <NavItem link={{ label: "For Hotels", dropdown: FOR_HOTELS_DROPDOWN }} />
+
+  <div className="h-5 w-px bg-slate-200" />
+
+  <Link
+    to="/guest/login"
+    className="whitespace-nowrap text-[14px] font-medium text-slate-700 transition-colors duration-200 hover:text-blue-600"
+  >
+    Sign in
+  </Link>
+  <Link
+    to="/guest/signup"
+    className="whitespace-nowrap rounded-full bg-blue-600 px-4 py-2 text-[14px] font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
+  >
+    Sign up
+  </Link>
+</div>
 
           {/* Mobile hamburger */}
           <button
@@ -466,21 +512,61 @@ export default function Navbar() {
               />
             ))}
           </div>
+          <div className="my-4 flex flex-col gap-3">
+  <p className="px-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+    For Hotels
+  </p>
+  <Link
+  to="/login"
+  onClick={() => setMobileOpen(false)}
+  className="block rounded-full border border-slate-200 px-5 py-3 text-center text-[15px] font-semibold text-slate-700 transition-colors duration-200 hover:bg-slate-50"
+>
+  Hotel Login
+</Link>
+<Link
+  to="/signup"
+  onClick={() => setMobileOpen(false)}
+  className="block rounded-full border border-slate-200 px-5 py-3 text-center text-[15px] font-semibold text-slate-700 transition-colors duration-200 hover:bg-slate-50"
+>
+  List your property
+</Link>
+
+  <p className="mt-2 px-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+    For Guests
+  </p>
+  <Link
+    to="/guest/login"
+    onClick={() => setMobileOpen(false)}
+    className="block rounded-full border border-blue-600 px-5 py-3 text-center text-[15px] font-semibold text-blue-600 transition-colors duration-200 hover:bg-blue-50"
+  >
+    Sign in
+  </Link>
+  <Link
+    to="/guest/signup"
+    onClick={() => setMobileOpen(false)}
+    className="block rounded-full bg-blue-600 px-5 py-3 text-center text-[15px] font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-blue-700"
+  >
+    Sign up
+  </Link>
+</div>
 
           <div className="my-4 flex flex-col gap-3">
+            <p className="px-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              For Guests
+            </p>
             <Link
-              to="/login"
+              to="/guest/login"
               onClick={() => setMobileOpen(false)}
               className="block rounded-full border border-blue-600 px-5 py-3 text-center text-[15px] font-semibold text-blue-600 transition-colors duration-200 hover:bg-blue-50"
             >
-              Login
+              Sign in
             </Link>
             <Link
-              to="/signup"
+              to="/guest/signup"
               onClick={() => setMobileOpen(false)}
               className="block rounded-full bg-blue-600 px-5 py-3 text-center text-[15px] font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-blue-700"
             >
-              Signup
+              Sign up
             </Link>
           </div>
         </div>

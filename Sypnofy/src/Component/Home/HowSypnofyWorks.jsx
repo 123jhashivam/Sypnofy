@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import {
   Building2,
   ScanLine,
-  Hotel,
+  ClipboardCheck,
   CheckCircle2,
   ArrowRight,
 } from "lucide-react";
@@ -11,40 +11,40 @@ const steps = [
   {
     number: "01",
     icon: Building2,
-    title: "Hotel Setup",
+    title: "Property Setup",
     description:
-      "Register your property, configure rooms, pricing, staff accounts and start managing your hotel from one dashboard.",
+      "Register your property, add GSTIN/PAN records, configure rooms and set up role-based staff access.",
     points: [
-      "Hotel Registration",
-      "Room Configuration",
-      "Staff Management",
-      "Pricing Setup",
+      "Property Registration",
+      "GSTIN / PAN Records",
+      "Role-Based Staff Access",
+      "Multi-Property Hierarchy",
     ],
   },
   {
     number: "02",
     icon: ScanLine,
-    title: "Guest Check-In",
+    title: "Guest KYC & Check-In",
     description:
-      "Guests verify their identity, complete digital check-in and receive instant room access with a secure QR experience.",
+      "Guests verify identity via Aadhaar Offline e-KYC or DigiLocker, then complete check-in with a QR-based link.",
     points: [
-      "Digital Check-In",
-      "Aadhaar Verification",
-      "QR Access",
+      "Aadhaar / DigiLocker KYC",
+      "QR Check-In Link",
+      "Instant Verification",
       "Paperless Process",
     ],
   },
   {
     number: "03",
-    icon: Hotel,
-    title: "Smart Stay",
+    icon: ClipboardCheck,
+    title: "Compliance & Audit",
     description:
-      "Guests request services, order food, contact reception and complete checkout without waiting at the front desk.",
+      "Foreign guest details are filed automatically, and every action is logged to a tamper-evident audit trail.",
     points: [
-      "Room Service",
-      "Housekeeping",
-      "Guest Requests",
-      "Digital Checkout",
+      "Form III Auto-Filing",
+      "24-Hour Reporting Window",
+      "Tamper-Evident Audit Log",
+      "Exportable Compliance Reports",
     ],
   },
 ];
@@ -80,11 +80,11 @@ export default function HowSypnofyWorks() {
 
           <h2 className="mt-6 text-4xl md:text-5xl font-bold text-slate-900">
 
-            A Complete Digital Journey
+            A Complete Compliance Journey
 
             <span className="block text-blue-600">
 
-              From Booking To Checkout
+              From Setup To Audit
 
             </span>
 
@@ -92,9 +92,9 @@ export default function HowSypnofyWorks() {
 
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">
 
-            Every guest interaction—from registration to checkout—is
-            managed through one connected platform, helping hotels
-            deliver faster, smarter and more personalized experiences.
+            Every step — from property setup to guest verification to
+            compliance filing — runs through one connected platform, so
+            nothing falls through the cracks.
 
           </p>
 
